@@ -1,0 +1,5 @@
+*.png
+*.jpg
+*.sh
+__pycache__/*
+config.ini
