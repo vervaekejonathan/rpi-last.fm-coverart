@@ -1,5 +1,4 @@
 from guizero import App, Text, Picture
-import spotipy
 import lastfm
 import _thread 
 import configparser
