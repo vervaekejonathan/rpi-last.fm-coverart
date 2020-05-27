@@ -16,7 +16,7 @@ current_cover_art = ""
 
 # the screensaver disrupts the application (on RPI), so we send a disactive command periodically
 def screensaver(onoff):
-    os.system('xscreensaver-command -' + ('de' if not onoff else '') + 'activate > /dev/null')
+    os.system('xscreensaver-command -' + ('de' if not onoff else '') + 'activate > /dev/null 2>&1')
 
 def disable_screensaver():
     screensaver(False)
