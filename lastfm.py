@@ -25,7 +25,7 @@ def getuser():
 
 
 def update_album_art():
-    #try:
+    try:
         network, user = connect()
         track = user.get_now_playing()    
         album = track.get_album()
@@ -34,13 +34,6 @@ def update_album_art():
 
         if album is not None:
             image = album.get_cover_image()
-
-        #if album is None or image is None:
-        #    print("no album found using alternative")
-        #    artist_name = track.get_artist()
-        #    album_name = track.get_album()
-        #    album = network.get_album(artist_name, album_name)
-        #    image = album.get_cover_image()
 
         if album is None or image is None:
             print("no album found using artist instead")
@@ -52,9 +45,9 @@ def update_album_art():
             print("no cover available")
             image = None
         return image
-    #except Exception as e:
-    #    print(e)
-    #    return None
+    except Exception as e:
+        print(e)
+        return None
     
 if __name__ == "__main__":
     getuser()
