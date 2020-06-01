@@ -26,14 +26,10 @@ def getuser():
         return None
 
 
-def update_album_art():
+def update_album_art(current_track):
     try:
-        network, user = connect()
-        track = user.get_now_playing()
-        artist = track.artist
-        album = track.album
-        image = track.image[len(track.image)-1]
-
+        images = current_track.image
+        image = images[len(images)-1]
         if image == "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png":
             print("no cover available")
             image = None

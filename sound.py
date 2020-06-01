@@ -74,7 +74,7 @@ def update_message():
                 current_track.title + "\n" + str(album_title)
 
             # handle cover art
-            cover_art = lastfm.update_album_art()
+            cover_art = lastfm.update_album_art(current_track)
             print(cover_art)
             pic.after(0, update_album_art, args=[cover_art])
 
