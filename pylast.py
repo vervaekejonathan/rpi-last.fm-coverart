@@ -2362,7 +2362,7 @@ class User(_BaseObject, _Chartable):
         artist = _extract(e, "artist")
         title = _extract(e, "name")
         album = _extract(e, "album")
-        image = _extract(e, "image")
+        image = _extract_all(e, "image")
 
         return RecentTrack(artist, album, title, image, self.network, self.name)
 
