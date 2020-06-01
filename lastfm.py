@@ -18,25 +18,25 @@ def connect():
 
 
 def getuser():
-    try:
-        network, user = connect()
-        return user.get_now_playing()
-    except Exception as e:
-        print(e)
-        return None
+    # try:
+    network, user = connect()
+    return user.get_now_playing()
+    # except Exception as e:
+    #    print(e)
+    #    return None
 
 
 def update_album_art(current_track):
-    try:
-        images = current_track.image
-        image = images[len(images)-1]
-        if image == "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png":
-            print("no cover available")
-            image = None
-        return image
-    except Exception as e:
-        print(e)
-        return None
+    # try:
+    image = current_track.get_cover_image()
+    #image = images[len(images)-1]
+    if image == "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png":
+        print("no cover available")
+        image = None
+    return image
+    # except Exception as e:
+    #    print(e)
+    #    return None
 
 
 if __name__ == "__main__":

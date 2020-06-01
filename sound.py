@@ -66,7 +66,7 @@ def update_message():
             print(str(current_track))
 
             # get the album that matches the track
-            album = current_track.album
+            album = current_track.get_album()
             album_title = "" if album is None else album.title
 
             # format the artist, title and album

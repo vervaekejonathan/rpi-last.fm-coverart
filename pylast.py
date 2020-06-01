@@ -202,7 +202,8 @@ class _Network:
             and (self.username and self.password_hash)
         ):
             sk_gen = SessionKeyGenerator(self)
-            self.session_key = sk_gen.get_session_key(self.username, self.password_hash)
+            self.session_key = sk_gen.get_session_key(
+                self.username, self.password_hash)
 
     def __str__(self):
         return "%s Network" % self.name
@@ -547,7 +548,6 @@ class _Network:
         context=None,
         mbid=None,
     ):
-
         """Used to add a track-play to a user's profile.
 
         Parameters:
@@ -629,7 +629,8 @@ class _Network:
                     else:
                         maps_to = arg
 
-                    params["%s[%d]" % (maps_to, i)] = tracks_to_scrobble[i][arg]
+                    params["%s[%d]" %
+                           (maps_to, i)] = tracks_to_scrobble[i][arg]
 
         _Request(self, "track.scrobble", params).execute()
 
@@ -895,7 +896,8 @@ class _Request:
 
         data = []
         for name in self.params.keys():
-            data.append("=".join((name, quote_plus(_string(self.params[name])))))
+            data.append(
+                "=".join((name, quote_plus(_string(self.params[name])))))
         data = "&".join(data)
 
         headers = {
@@ -927,7 +929,8 @@ class _Request:
             conn = HTTPSConnection(context=SSL_CONTEXT, host=host_name)
 
             try:
-                conn.request(method="POST", url=host_subdir, body=data, headers=headers)
+                conn.request(method="POST", url=host_subdir,
+                             body=data, headers=headers)
             except Exception as e:
                 raise NetworkError(self.network, e)
 
@@ -956,7 +959,8 @@ class _Request:
         """Checks the response for errors and raises one if any exists."""
 
         try:
-            doc = minidom.parseString(_string(response).replace("opensearch:", ""))
+            doc = minidom.parseString(
+                _string(response).replace("opensearch:", ""))
         except Exception as e:
             raise MalformedResponseError(self.network, e)
 
@@ -1059,7 +1063,8 @@ class SessionKeyGenerator:
         """
         Retrieves the session key of a web authorization process by its URL.
         """
-        session_key, _username = self.get_web_auth_session_key_username(url, token)
+        session_key, _username = self.get_web_auth_session_key_username(
+            url, token)
         return session_key
 
     def get_session_key(self, username, password_hash):
@@ -1068,7 +1073,8 @@ class SessionKeyGenerator:
         password.
         """
 
-        params = {"username": username, "authToken": md5(username + password_hash)}
+        params = {"username": username,
+                  "authToken": md5(username + password_hash)}
         request = _Request(self.network, "auth.getMobileSession", params)
 
         # default action is that a request is signed only when
@@ -1082,13 +1088,16 @@ class SessionKeyGenerator:
 
 TopItem = collections.namedtuple("TopItem", ["item", "weight"])
 SimilarItem = collections.namedtuple("SimilarItem", ["item", "match"])
-LibraryItem = collections.namedtuple("LibraryItem", ["item", "playcount", "tagcount"])
+LibraryItem = collections.namedtuple(
+    "LibraryItem", ["item", "playcount", "tagcount"])
 PlayedTrack = collections.namedtuple(
     "PlayedTrack", ["track", "album", "playback_date", "timestamp"]
 )
-LovedTrack = collections.namedtuple("LovedTrack", ["track", "date", "timestamp"])
+LovedTrack = collections.namedtuple(
+    "LovedTrack", ["track", "date", "timestamp"])
 ImageSizes = collections.namedtuple(
-    "ImageSizes", ["original", "large", "largesquare", "medium", "small", "extralarge"]
+    "ImageSizes", ["original", "large", "largesquare",
+                   "medium", "small", "extralarge"]
 )
 Image = collections.namedtuple(
     "Image", ["title", "url", "dateadded", "format", "owner", "sizes", "votes"]
@@ -1148,7 +1157,8 @@ class _BaseObject:
             artist = _extract(node, "name", 1)
             playcount = _number(_extract(node, "playcount"))
 
-            seq.append(TopItem(thing_type(artist, title, self.network), playcount))
+            seq.append(
+                TopItem(thing_type(artist, title, self.network), playcount))
 
         return seq
 
@@ -1254,7 +1264,8 @@ class _Chartable:
                 item = chart_type(_extract(node, "name"), self.network)
             else:
                 item = chart_type(
-                    _extract(node, "artist"), _extract(node, "name"), self.network
+                    _extract(node, "artist"), _extract(
+                        node, "name"), self.network
                 )
             weight = _number(_extract(node, "playcount"))
             seq.append(TopItem(item, weight))
@@ -1528,7 +1539,8 @@ class _Opus(_BaseObject, _Taggable):
         """
         if "image" not in self.info:
             self.info["image"] = _extract_all(
-                self._request(self.ws_prefix + ".getInfo", cacheable=True), "image"
+                self._request(self.ws_prefix + ".getInfo",
+                              cacheable=True), "image"
             )
         return self.info["image"][size]
 
@@ -1551,7 +1563,8 @@ class _Opus(_BaseObject, _Taggable):
 
         return _number(
             _extract(
-                self._request(self.ws_prefix + ".getInfo", cacheable=True), "playcount"
+                self._request(self.ws_prefix + ".getInfo",
+                              cacheable=True), "playcount"
             )
         )
 
@@ -1572,7 +1585,8 @@ class _Opus(_BaseObject, _Taggable):
 
         return _number(
             _extract(
-                self._request(self.ws_prefix + ".getInfo", cacheable=True), "listeners"
+                self._request(self.ws_prefix + ".getInfo",
+                              cacheable=True), "listeners"
             )
         )
 
@@ -1609,7 +1623,8 @@ class Album(_Opus):
         """Returns the list of Tracks on this album."""
 
         return _extract_tracks(
-            self._request(self.ws_prefix + ".getInfo", cacheable=True), self.network
+            self._request(self.ws_prefix + ".getInfo",
+                          cacheable=True), self.network
         )
 
     def get_url(self, domain_name=DOMAIN_ENGLISH):
@@ -1715,7 +1730,8 @@ class Artist(_BaseObject, _Taggable):
 
         if "image" not in self.info:
             self.info["image"] = _extract_all(
-                self._request(self.ws_prefix + ".getInfo", cacheable=True), "image"
+                self._request(self.ws_prefix + ".getInfo",
+                              cacheable=True), "image"
             )
         return self.info["image"][size]
 
@@ -1723,7 +1739,8 @@ class Artist(_BaseObject, _Taggable):
         """Returns the number of plays on the network."""
 
         return _number(
-            _extract(self._request(self.ws_prefix + ".getInfo", True), "playcount")
+            _extract(self._request(self.ws_prefix +
+                                   ".getInfo", True), "playcount")
         )
 
     def get_userplaycount(self):
@@ -1752,7 +1769,8 @@ class Artist(_BaseObject, _Taggable):
             return self.listener_count
         else:
             self.listener_count = _number(
-                _extract(self._request(self.ws_prefix + ".getInfo", True), "listeners")
+                _extract(self._request(self.ws_prefix +
+                                       ".getInfo", True), "listeners")
             )
             return self.listener_count
 
@@ -1761,7 +1779,8 @@ class Artist(_BaseObject, _Taggable):
 
         return bool(
             _number(
-                _extract(self._request(self.ws_prefix + ".getInfo", True), "streamable")
+                _extract(self._request(self.ws_prefix +
+                                       ".getInfo", True), "streamable")
             )
         )
 
@@ -1808,7 +1827,8 @@ class Artist(_BaseObject, _Taggable):
         artists = []
         for i in range(0, len(names)):
             artists.append(
-                SimilarItem(Artist(names[i], self.network), _number(matches[i]))
+                SimilarItem(
+                    Artist(names[i], self.network), _number(matches[i]))
             )
 
         return artists
@@ -1971,7 +1991,8 @@ class Library(_BaseObject):
             playcount = _number(_extract(node, "playcount"))
             tagcount = _number(_extract(node, "tagcount"))
 
-            seq.append(LibraryItem(Artist(name, self.network), playcount, tagcount))
+            seq.append(LibraryItem(
+                Artist(name, self.network), playcount, tagcount))
 
         return seq
 
@@ -2021,7 +2042,8 @@ class Tag(_BaseObject, _Chartable):
         if limit:
             params["limit"] = limit
 
-        doc = self._request(self.ws_prefix + ".getTopAlbums", cacheable, params)
+        doc = self._request(
+            self.ws_prefix + ".getTopAlbums", cacheable, params)
 
         return _extract_top_albums(doc, self.network)
 
@@ -2040,7 +2062,8 @@ class Tag(_BaseObject, _Chartable):
         if limit:
             params["limit"] = limit
 
-        doc = self._request(self.ws_prefix + ".getTopArtists", cacheable, params)
+        doc = self._request(
+            self.ws_prefix + ".getTopArtists", cacheable, params)
 
         return _extract_top_artists(doc, self.network)
 
@@ -2110,21 +2133,23 @@ class Track(_Opus):
 
         doc = self._request(self.ws_prefix + ".getInfo", True)
         return (
-            doc.getElementsByTagName("streamable")[0].getAttribute("fulltrack") == "1"
+            doc.getElementsByTagName("streamable")[
+                0].getAttribute("fulltrack") == "1"
         )
 
     def get_album(self):
         """Returns the album object of this track."""
+        if "album" not in self.info:
+            doc = self._request(self.ws_prefix + ".getInfo", True)
 
-        doc = self._request(self.ws_prefix + ".getInfo", True)
+            albums = doc.getElementsByTagName("album")
 
-        albums = doc.getElementsByTagName("album")
+            if len(albums) == 0:
+                return
 
-        if len(albums) == 0:
-            return
-
-        node = doc.getElementsByTagName("album")[0]
-        return Album(_extract(node, "artist"), _extract(node, "title"), self.network)
+            node = doc.getElementsByTagName("album")[0]
+            return Album(_extract(node, "artist"), _extract(node, "title"), self.network)
+        return Album(self.artist, self.info["album"], self.network)
 
     def love(self):
         """Adds the track to the user's loved tracks. """
@@ -2185,7 +2210,7 @@ class Track(_Opus):
         }
 
 
-class RecentTrack(_Opus):    
+class RecentTrack(_Opus):
     artist = None
     album = None
     title = None
@@ -2209,16 +2234,13 @@ class RecentTrack(_Opus):
         self.user = user
 
     def __eq__(self, other):
-            if type(self) != type(other):
-                return False
-            a = self.title().lower()
-            b = other.title().lower()
-            c = self.artist().get_name().lower()
-            d = other.artist().get_name().lower()
-            return (a == b) and (c == d)
-
-    
-
+        if type(self) != type(other):
+            return False
+        a = self.title().lower()
+        b = other.title().lower()
+        c = self.artist().get_name().lower()
+        d = other.artist().get_name().lower()
+        return (a == b) and (c == d)
 
 
 class User(_BaseObject, _Chartable):
@@ -2289,10 +2311,12 @@ class User(_BaseObject, _Chartable):
             artist = _extract(track, "artist")
             date = _extract(track, "date")
             album = _extract(track, "album")
-            timestamp = track.getElementsByTagName("date")[0].getAttribute("uts")
+            timestamp = track.getElementsByTagName(
+                "date")[0].getAttribute("uts")
 
             seq.append(
-                PlayedTrack(Track(artist, title, self.network), album, date, timestamp)
+                PlayedTrack(Track(artist, title, self.network),
+                            album, date, timestamp)
             )
 
         return seq
@@ -2333,9 +2357,11 @@ class User(_BaseObject, _Chartable):
                 continue
             title = _extract(track, "name")
             date = _extract(track, "date")
-            timestamp = track.getElementsByTagName("date")[0].getAttribute("uts")
+            timestamp = track.getElementsByTagName(
+                "date")[0].getAttribute("uts")
 
-            seq.append(LovedTrack(Track(artist, title, self.network), date, timestamp))
+            seq.append(LovedTrack(
+                Track(artist, title, self.network), date, timestamp))
 
         return seq
 
@@ -2363,8 +2389,10 @@ class User(_BaseObject, _Chartable):
         title = _extract(e, "name")
         album = _extract(e, "album")
         image = _extract_all(e, "image")
+        info = {"image": _extract_all(e, "image"), "album": album}
 
-        return RecentTrack(artist, album, title, image, self.network, self.name)
+        return Track(artist, title, self.network, self.name, info=info)
+        # return RecentTrack(artist, album, title, image, self.network, self.name)
 
     def get_recent_tracks(self, limit=10, cacheable=True, time_from=None, time_to=None):
         """
@@ -2388,7 +2416,8 @@ class User(_BaseObject, _Chartable):
 
         params = self._get_params()
         if limit:
-            params["limit"] = limit + 1  # in case we remove the now playing track
+            # in case we remove the now playing track
+            params["limit"] = limit + 1
         if time_from:
             params["from"] = time_from
         if time_to:
@@ -2410,10 +2439,12 @@ class User(_BaseObject, _Chartable):
             artist = _extract(track, "artist")
             date = _extract(track, "date")
             album = _extract(track, "album")
-            timestamp = track.getElementsByTagName("date")[0].getAttribute("uts")
+            timestamp = track.getElementsByTagName(
+                "date")[0].getAttribute("uts")
 
             seq.append(
-                PlayedTrack(Track(artist, title, self.network), album, date, timestamp)
+                PlayedTrack(Track(artist, title, self.network),
+                            album, date, timestamp)
             )
 
         if limit:
@@ -2469,7 +2500,8 @@ class User(_BaseObject, _Chartable):
         params["taggingtype"] = "album"
         if limit:
             params["limit"] = limit
-        doc = self._request(self.ws_prefix + ".getpersonaltags", cacheable, params)
+        doc = self._request(
+            self.ws_prefix + ".getpersonaltags", cacheable, params)
         return _extract_albums(doc, self.network)
 
     def get_tagged_artists(self, tag, limit=None):
@@ -2491,7 +2523,8 @@ class User(_BaseObject, _Chartable):
         params["taggingtype"] = "track"
         if limit:
             params["limit"] = limit
-        doc = self._request(self.ws_prefix + ".getpersonaltags", cacheable, params)
+        doc = self._request(
+            self.ws_prefix + ".getpersonaltags", cacheable, params)
         return _extract_tracks(doc, self.network)
 
     def get_top_albums(self, period=PERIOD_OVERALL, limit=None, cacheable=True):
@@ -2510,7 +2543,8 @@ class User(_BaseObject, _Chartable):
         if limit:
             params["limit"] = limit
 
-        doc = self._request(self.ws_prefix + ".getTopAlbums", cacheable, params)
+        doc = self._request(
+            self.ws_prefix + ".getTopAlbums", cacheable, params)
 
         return _extract_top_albums(doc, self.network)
 
@@ -2552,7 +2586,8 @@ class User(_BaseObject, _Chartable):
         for node in doc.getElementsByTagName("tag"):
             seq.append(
                 TopItem(
-                    Tag(_extract(node, "name"), self.network), _extract(node, "count")
+                    Tag(_extract(node, "name"), self.network), _extract(
+                        node, "count")
                 )
             )
 
@@ -2594,10 +2629,12 @@ class User(_BaseObject, _Chartable):
             artist = _extract(track, "artist")
             date = _extract(track, "date")
             album = _extract(track, "album")
-            timestamp = track.getElementsByTagName("date")[0].getAttribute("uts")
+            timestamp = track.getElementsByTagName(
+                "date")[0].getAttribute("uts")
 
             seq.append(
-                PlayedTrack(Track(artist, title, self.network), album, date, timestamp)
+                PlayedTrack(Track(artist, title, self.network),
+                            album, date, timestamp)
             )
 
         return seq
@@ -2754,7 +2791,8 @@ class TrackSearch(_Search):
     def __init__(self, artist_name, track_title, network):
 
         _Search.__init__(
-            self, "track", {"track": track_title, "artist": artist_name}, network
+            self, "track", {"track": track_title,
+                            "artist": artist_name}, network
         )
 
     def get_next_page(self):
