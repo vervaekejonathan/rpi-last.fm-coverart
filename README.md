@@ -45,11 +45,13 @@ Killing the script also works fine.
 
 ## Example
 I've attached an 'Optoma pico pk201' projector to my RPI. This projector's size is almost equal to my RPI.
-Leaves a nice project on my wall next to my computer.
+Leaves a nice projection on my wall next to my computer.
 
 <img src="https://i.ibb.co/WnZ7Hw5/Screenshot-from-2020-05-27-13-50-27.png" width="200" height="200" alt="PC" />
 <img src="https://i.ibb.co/DtKTf7D/IMG-20200527-134202-01.jpg" width="200" height="200" alt="Projection" />
+<img src="https://i.ibb.co/HHSD08t/IMG-20200527-151156.jpg" width="300"/>
+<img src="https://i.ibb.co/3rS8VGh/IMG-20200527-151246-01.jpg" width="250"/>
 
 ## Issues
-Sometimes, nothing is shown. This can have 2 issues. One is that last.fm is down again, most of the time it's back in a minute.
+Sometimes, nothing is shown. This can have 2 reasons. One is that last.fm is temporary down, most of the time it's back in a minute.
 It's also possible that no album cover is present. A backup was implemented display the artist coverart instead, but I've noticed most of the time both are not there. Just wait for the next song I guess! Or.. Add the coverart yourself on last.fm!
